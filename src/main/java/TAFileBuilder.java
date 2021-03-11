@@ -1,4 +1,4 @@
-import utils.CsvDataReader;
+import utils.TxTDataReader;
 import utils.FieldDefinitionsReader;
 
 import java.io.*;
@@ -45,7 +45,7 @@ public class TAFileBuilder{
         ArrayList<String> fieldsName = readFields(fileType);
         ArrayList<HashMap<String, String>> data;
         try {
-            data = CsvDataReader.read(foldername,batchRundate,fileCode,fileType);
+            data = TxTDataReader.read(foldername,batchRundate,fileCode,fileType);
         }catch (FileNotFoundException){
             data = new ArrayList<>();
         }

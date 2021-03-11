@@ -1,10 +1,6 @@
 import utils.TxTDataReader;
-import utils.FieldDefinitionsReader;
 
 import java.io.*;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class TAFileBuilder{
     public String folderName;
@@ -31,19 +27,20 @@ public class TAFileBuilder{
         this.senderName = "";
         this.receiverName = "";
     }
-    public void build(String[] fileTypes) throws FileNotFoundException {
+    public void build(String[] fileTypes) throws IOException {
+
+        TxTDataReader txtDataReader = new TxTDataReader();
         //build file
         String fileCreationDate = batchRunDate;
         for(String fileType : fileTypes){
             populateOFDFile(fileCreationDate, fileType);
+            String outputFileName = txtDataReader.getOutputFileName(batchRunDate, folderName, fileType);
         }
-        //populatOFIFile in here
     }
 
     private void populateOFDFile(String fileCreationDate, String fileType) throws FileNotFoundException {
 
         String filename = String.format("OFD_%s_%s_s_%s.TXT",fileReciverCode,fileReciverCode,fileCreationDate,fileType);
-        TxTDataReader.read(batchRunDate,  folderName, fileType);
     }
 //        ArrayList<String> fieldsName = readFields(fileType);
 //        ArrayList<HashMap<String, String>> data;

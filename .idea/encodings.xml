@@ -3,11 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/fileBuilder/20200315/OpenAccount/OFD_X01_F6_20100517_01.TXT" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/fileBuilder/20210310/OpenAccount/01/OFD_X01_F6_20100517_01.TXT" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/fileBuilder/20210310/OpenAccount/01/OFD_X01_F6_20100517_01.TXT" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/fileBuilder/20210310/OpenAccount/03/OFD_X02_F6_20100517_03.TXT" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/fileBuilder/20210311/OFD_X01_F6_20100517_01.TXT" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/fileBuilder/20210311/OFD_X02_F6_20100517_01.TXT" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/inputFiles/20210311/OFD_X01_F6_20100517_01.TXT" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/inputFiles/20210311/OFD_X02_F6_20100517_01.TXT" charset="GBK" />
   </component>
 </project>

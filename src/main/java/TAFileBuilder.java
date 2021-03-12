@@ -25,6 +25,7 @@ public class TAFileBuilder {
     public String indexFileStartCode;
     public String indexFileEndCode;
     public String fileReciverCode;
+    public String outputFileName;
 
     // title数量开始的位置，为固定的，所以写死
     private static final int TITLE_COUNT_INDEX = 9;
@@ -48,17 +49,16 @@ public class TAFileBuilder {
         TxTDataReader txtDataReader = new TxTDataReader();
         //build file
         String fileCreationDate = batchRunDate;
+        System.out.println(fileCreationDate);
         for (String fileType : fileTypes) {
-            String outputFileName = txtDataReader.getOutputFileName(batchRunDate, folderName, fileType);
+            outputFileName = txtDataReader.getOutputFileName(fileCreationDate, folderName, fileType);
             List<String> data = txtDataReader.getInputContent();
             System.out.println(data);
             populateOFDFile(fileCreationDate, fileType, data);
-//            System.out.println(Arrays.toString(data.toArray()));
         }
     }
 
     private void populateOFDFile(String fileCreationDate, String fileType, List<String> data) throws IOException {
-        String filename = String.format("OFD_%s_%s_%s_%s.TXT", fileReciverCode, fileCode, fileCreationDate, fileType);
         String outDir;
         try {
             outDir = LoadConfig.Load("output_dir");
@@ -67,7 +67,7 @@ public class TAFileBuilder {
         }
         String outputDirPath = Paths.get(outDir, "output", fileCreationDate, fileCode).toString();
         new File(outputDirPath).mkdirs();
-        String outputPath = Paths.get(outputDirPath, filename).toString();
+        String outputPath = Paths.get(outputDirPath, outputFileName).toString();
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputPath),
                 "GBK"));
         writeHeader(writer, fileCreationDate, fileType);
@@ -85,7 +85,7 @@ public class TAFileBuilder {
 
     private List<List<String>> parseContent(List<String> data) {
         List<List<String>> retContent = new ArrayList<>();
-        String date = "20201231";
+        //String date = "20201231";
 
         int titleCount = Integer.parseInt(data.get(TITLE_COUNT_INDEX));
         // 总共有几条数据
@@ -98,21 +98,18 @@ public class TAFileBuilder {
             String wholeContent = data.get(startIndex + i);
             String AppSheetSerialNo = wholeContent.substring(rules.get("AppSheetSerialNo_start"),
                     rules.get("AppSheetSerialNo_end"));
-            retContent.add(Arrays.asList(AppSheetSerialNo, date));
+            retContent.add(Arrays.asList(AppSheetSerialNo, batchRunDate));
         }
         return retContent;
     }
-
     // 返回解析到的CSV规则
     // TODO: 先mock 后续需要补充内容
     private Map<String, Integer> parseRule() {
         Map<String, Integer> rules = new HashMap<>();
-
         // 字段起始位置
         rules.put("AppSheetSerialNo_start", 15);
         // 字段结束位置
         rules.put("AppSheetSerialNo_end", 30);
-
         return rules;
     }
 
@@ -125,7 +122,6 @@ public class TAFileBuilder {
         writeWithNewLine(writer, aggregationNumber);
         writeWithNewLine(writer, fileType);
         writeWithNewLine(writer, "");
-
         writeWithNewLine(writer, "AppSheetSerialNo");
         writeWithNewLine(writer, "TransactionCfmDate");
         writer.flush();

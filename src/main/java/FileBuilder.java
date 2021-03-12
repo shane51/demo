@@ -6,13 +6,17 @@ import utils.LoadConfig;
 
 public class FileBuilder {
     public static String folderName ="OpenAccount";
-    public static String date ="20210310";
+    public static String date;
+
 
     public static void main(String[] args) throws IOException {
+        date = LoadConfig.Load("batchRunDate");
+        System.out.println(date);
         buildOneDateFile(folderName,date);
     }
 
     private static void buildOneDateFile(String folderName, String date) throws IOException {
+        System.out.println(date);
         System.out.println("------TANameList--------"+LoadConfig.Load("TANameList"));
         List<String>  TAList= Arrays.stream(LoadConfig.Load("TANameList").split(","))
                 .map(String::trim)

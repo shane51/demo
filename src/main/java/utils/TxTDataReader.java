@@ -33,7 +33,7 @@ public class TxTDataReader {
         System.out.println("输入文件名：" + outputFileName);
         return outputFileName;
     }
-    public List<String> getInputContent(){
+    public static List<String> getInputContent(){
         List<String> list = new ArrayList<String>();
         try
         {

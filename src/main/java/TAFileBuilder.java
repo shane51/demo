@@ -1,7 +1,11 @@
+import utils.LoadConfig;
 import utils.TxTDataReader;
 
 import java.io.*;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class TAFileBuilder{
@@ -42,40 +46,63 @@ public class TAFileBuilder{
         }
     }
 
-    private void populateOFDFile(String fileCreationDate, String fileType) throws FileNotFoundException {
+    private void populateOFDFile(String fileCreationDate, String fileType) throws IOException {
+        String filename = String.format("OFD_%s_%s_%s_%s.TXT", fileReciverCode, fileCode, fileCreationDate, fileType);
+        ArrayList<String> fieldsName = readFields(fileType);
+        List<String> data;
+        data = TxTDataReader.getInputContent();
 
-        String filename = String.format("OFD_%s_%s_s_%s.TXT",fileReciverCode,fileReciverCode,fileCreationDate,fileType);
+        String outDir;
+        try {
+            outDir = LoadConfig.Load("output_dir");
+        } catch (IOException err) {
+            outDir = "src/main/resources/";
+        }
+        String outputDirPath = Paths.get(outDir, "output", fileCreationDate, fileCode).toString();
+        new File(outputDirPath).mkdirs();
+        String outputPath = Paths.get(outputDirPath, filename).toString();
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputPath),
+                "GBK"));
+        writeHeader(writer, fileCreationDate, fileType);
+
+        List<String> content = readContentFromInputFile();
+        writeContent(writer, content.get(0), content.get(1));
+        writer.close();
     }
-//        ArrayList<String> fieldsName = readFields(fileType);
-//        ArrayList<HashMap<String, String>> data;
-//        try {
-//            data = TxTDataReader.read(String batchRunDate, String folderName, String fileType);
-//        }catch (FileNotFoundException){
-//            data = new ArrayList<>();
-//        }
-//        HashMap<String, HashMap<String,String>> fieldDefinitions = FieldDefinitionsReader.readFieldDefinitions(fileCode);
-//        HashMap<String, Integer> fieldLengthMap = FieldDefinitionsReader.getFieldLength(fieldDefinitions);
-//        HashMap<String, Integer> fieldPrecisionMap = FieldDefinitionsReader.fieldPrecisionMap(fieldDefinitions);
-//        String outputDirPath = Paths.get(System.getProperty("user,dir"),"output",fileCreationDate,fileCode).toString();
-//        new File(outputDirPath).mkdirs();
-//        String outputPath = Paths.get(outputDirPath,filename).toString();
-//        try (BufferedWriter writer = new BufferedWriter(
-//            new OutputStreamWriter(new FileOutputStream(outputPath), "GBK"))){
-//            writeWithNewLine(writer,dataFileStartCode);
-//            writeWithNewLine(writer,fileVersion);
-//            writeWithNewLine(writer,fileCode);
-//            writeWithNewLine(writer,fileReciverCode);
-//            writeWithNewLine(writer,fileCreationDate);
-//            writeWithNewLine(writer,aggregationNumber);
-//            writeWithNewLine(writer,fileType);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private void writeWithNewLine(BufferedWriter writer, String dataFileStartCode) {
-//    }
-//
-//    private ArrayList<String> readFields(String fileType) {
-//        //read field from fieldDefinitions fields.txt}
+
+    // TODO: 先mock 后续需要补充内容
+    private List<String> readContentFromInputFile() {
+        return Arrays.asList("12345678  ", "20201231");
+    }
+
+    private void writeHeader(BufferedWriter writer, String fileCreationDate, String fileType) throws IOException {
+        writeWithNewLine(writer, dataFileStartCode);
+        writeWithNewLine(writer, fileVersion);
+        writeWithNewLine(writer, fileCode);
+        writeWithNewLine(writer, fileReciverCode);
+        writeWithNewLine(writer, fileCreationDate);
+        writeWithNewLine(writer, aggregationNumber);
+        writeWithNewLine(writer, fileType);
+        writeWithNewLine(writer, "");
+        writer.flush();
+    }
+
+    private void writeContent(BufferedWriter writer, String AppSheetSerialNo, String TransactionCfmDate) throws IOException {
+        writeWithNewLine(writer,"AppSheetSerialNo");
+        writeWithNewLine(writer, "TransactionCfmDate");
+
+        writer.write(AppSheetSerialNo);
+        writer.write(TransactionCfmDate);
+        writer.flush();
+    }
+
+    private void writeWithNewLine(BufferedWriter writer, String code) throws IOException {
+        writer.write(code);
+        writer.write('\n');
+    }
+
+    private ArrayList<String> readFields(String fileType) {
+        //read field from fieldDefinitions fields.txt
+        return null;
+    }
 }

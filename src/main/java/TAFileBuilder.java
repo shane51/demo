@@ -5,7 +5,6 @@ import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 public class TAFileBuilder{
@@ -48,10 +47,6 @@ public class TAFileBuilder{
 
     private void populateOFDFile(String fileCreationDate, String fileType) throws IOException {
         String filename = String.format("OFD_%s_%s_%s_%s.TXT", fileReciverCode, fileCode, fileCreationDate, fileType);
-        ArrayList<String> fieldsName = readFields(fileType);
-        List<String> data;
-        data = TxTDataReader.getInputContent();
-
         String outDir;
         try {
             outDir = LoadConfig.Load("output_dir");

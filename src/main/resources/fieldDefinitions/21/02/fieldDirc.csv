@@ -1,3 +1,0 @@
-﻿ID,字段名,类型,长度,描述,备注,是否必须
-8,AppSheetSerialNo,C,24,申请单编号,同一销售机构不能重复,Y
-32,TransactionCfmDate,A,8,交易确认日期,格式为：YYYYMMDD,Y

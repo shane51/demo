@@ -1,0 +1,9 @@
+﻿ID,字段名,类型,长度,描述,备注,是否必须
+6，address,C,6,地址，无,Y
+14，InstReprIDCode,N,1,无,N
+14,InstReprIDType,C,2,无,N
+12,InstReprName,C,6,无,Y
+8,AppSheetSerialNo,C,24,申请单编号,同一销售机构不能重复,Y
+
+
+

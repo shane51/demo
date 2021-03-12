@@ -1,6 +1,8 @@
 import utils.TxTDataReader;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class TAFileBuilder{
     public String folderName;
@@ -35,6 +37,8 @@ public class TAFileBuilder{
         for(String fileType : fileTypes){
             populateOFDFile(fileCreationDate, fileType);
             String outputFileName = txtDataReader.getOutputFileName(batchRunDate, folderName, fileType);
+            List list = txtDataReader.getInputContent();
+            System.out.println(Arrays.toString(list.toArray()));
         }
     }
 

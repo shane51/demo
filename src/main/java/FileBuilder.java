@@ -3,7 +3,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import utils.LoadConfig;
-import utils.TxTDataReader;
 
 public class FileBuilder {
     public static String folderName ="OpenAccount";

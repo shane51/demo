@@ -6,6 +6,9 @@ F6
 000
 02
 
+002
 AppSheetSerialNo
 TransactionCfmDate
+001
 12345678  20201231
+OFDCFEND

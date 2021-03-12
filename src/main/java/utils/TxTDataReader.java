@@ -34,8 +34,8 @@ public class TxTDataReader {
         return outputFileName;
     }
 
-    public static List<String> getInputContent(){
-        List<String> list = new ArrayList<String>();
+    public List<String> getInputContent(){
+        List<String> list = new ArrayList<>();
         try
         {
             String encoding = "GBK";
@@ -44,7 +44,7 @@ public class TxTDataReader {
                 {
                     InputStreamReader read = new InputStreamReader(new FileInputStream(file), encoding);// 考虑到编码格式
                     BufferedReader bufferedReader = new BufferedReader(read);
-                    String lineTxt = null;
+                    String lineTxt;
                     while ((lineTxt = bufferedReader.readLine()) != null)
                     {
                         list.add(lineTxt);

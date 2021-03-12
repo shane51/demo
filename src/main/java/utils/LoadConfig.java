@@ -10,7 +10,6 @@ public class LoadConfig {
          BufferedReader bufferedReader = new BufferedReader(new FileReader("src/main/resources/TAs.properties"));
          properties.load(bufferedReader);
         // 获取key对应的value值
-         String key = properties.getProperty(propertyName);
-         return key;
+         return properties.getProperty(propertyName);
      }
 }

@@ -1,0 +1,11 @@
+OFDCFDAT
+22
+001
+F6
+20210310
+000
+02
+
+AppSheetSerialNo
+TransactionCfmDate
+12345678  20201231

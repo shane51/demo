@@ -1,15 +1,14 @@
 package utils;
 
-import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class AnalysisTemplate {
-    ArrayList inputFileTempPath;
+    List<String> inputFileTempPath;
+    List<List<String>> inputTempData;
     public void readInputFile() throws IOException {
         //通过pdfVersion获取当前版本下所有模版文件
         String pdfVersion = LoadConfig.Load("pdfVersion");
@@ -22,9 +21,14 @@ public class AnalysisTemplate {
             System.out.println("--------inputFileTempPath:"+inputFileTempPath);
         }
     }
-    public void getInputDefinitionDir(){
+    public List<List<String>>  getInputDefinitionData() throws IOException {
+        readInputFile();
         //得到模版文件
-
+        for (int i = 0; i< inputFileTempPath.size(); i++){
+            inputTempData.add(ReadFileInfo.getContent(inputFileTempPath.get(i).toString()));
+            System.out.println(inputTempData);
+        }
+        return inputTempData;
     }
 
     public void readFieldDefinitions(){

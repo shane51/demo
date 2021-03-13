@@ -7,38 +7,54 @@ import java.util.Date;
 import java.util.List;
 
 public class TxTDataReader {
-    static String reciverCode;
-    static String senderCode;
+    public static String reciverCode = null;
+    public static String senderCode = null;
     static String outputFileDate;
-    static String inputFileDir;
-
-    public String getOutputFileName(String batchRunDate, String folderName, String fileType) throws IOException {
-         String inputFileName = null;
-         String inputfileType="01";
-        //get input filename
-        File file = new File("");//参数为空
-        String path = file.getCanonicalPath() + "/src/main/resources/inputFiles/" + batchRunDate +"/"+ folderName +"/"+ inputfileType;
-        File file1 = new File(path);
-        File[] files = file1.listFiles();
-        for (int i =0; i < files.length; i++){
-            inputFileName = files[i].getName();
-            inputFileDir = files[i].getPath();
+    static List<String>inputFileDir = new ArrayList<String>();
+    static List<String> inputFileName = new ArrayList<String>();
+    static List<String> outputFileName = new ArrayList<String>();
+    //static List<String> inputFileDir = null;
+    static File file = new File("");//参数为空
+    public List<String> getOutputFileName(String batchRunDate, String folderName, String[] fileType) throws IOException {
+        String[] inputFileCode = LoadConfig.Load("InputFileCode").split(",");
+        int dirCount = inputFileCode.length;
+        //outputFileName = new ArrayList<String>();
+        System.out.println("------dirCount:"+dirCount);
+        for (int i = 0; i < inputFileCode.length; i++) {
+            String tmpPath = file.getCanonicalPath() + "/src/main/resources/inputFiles/" + batchRunDate + "/" + folderName + "/" + inputFileCode[i];
+          //  System.out.println("------tmpPath:"+tmpPath);
+            inputFileDir.add(tmpPath);
+            File file1 = new File(inputFileDir.get(i));
+            File[] files = file1.listFiles();
+            System.out.println("---inputFileName:"+ files[0].getName());
+            inputFileName.add(files[0].getName());
+//            for (int j =0; j < files.length; j++){
+//                inputFileName[j] = files[j].getName();
+//                inputFileDir.get(j) = files[j].getPath();
+                getReciverSenderCode(inputFileName.get(i));
+                getSystemDate();
+                String tmpName = String.format("OFD_%s_%s_%s_%s.TXT",reciverCode,senderCode,outputFileDate,fileType[i]);
+                System.out.println("------tmpName:"+tmpName);
+                outputFileName.add(String.format("OFD_%s_%s_%s_%s.TXT",reciverCode,senderCode,outputFileDate,fileType[i]));
+                System.out.println("输出文件名：" + outputFileName.get(i));
+            //}
         }
-        getReciverSenderCode(inputFileName);
-        System.out.println("输入文件名：" + inputFileName);
-        getSystemDate();
-        String outputFileName = String.format("OFD_%s_%s_%s_%s.TXT",reciverCode,senderCode,outputFileDate,fileType);
-        System.out.println("输入文件名：" + outputFileName);
         return outputFileName;
     }
-    public List<String> getInputFileContent(){
-        List<String> data = GetFileContent.getContent(inputFileDir);
+    public List<List<String>> getInputFileContent(){
+        List<List<String>> data = new ArrayList<List<String>>();;
+        for (int i =0; i < inputFileDir.size(); i++){
+            String fileName = inputFileDir.get(i)+"/"+inputFileName.get(i);
+            System.out.println("------inputFileDir:"+fileName);
+            List<String> data1 = ReadFileInfo.getContent(fileName);
+            System.out.println(data1);
+            data.add(data1);
+            data.add(ReadFileInfo.getContent(fileName));}
         return data;
     }
     private void getSystemDate(){
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
         outputFileDate = df.format(new Date());
-        System.out.println("-----outputFileDate----"+outputFileDate);//
     }
 
     private void getReciverSenderCode(String inputFileName) {

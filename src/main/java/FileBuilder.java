@@ -5,25 +5,26 @@ import java.util.stream.Collectors;
 import utils.LoadConfig;
 
 public class FileBuilder {
-    public static String folderName ="OpenAccount";
     public static String date;
-
-
     public static void main(String[] args) throws IOException {
         date = LoadConfig.Load("batchRunDate");
-        System.out.println(date);
-        buildOneDateFile(folderName,date);
+        String[] folderName = LoadConfig.Load("TestScenarios").split(",");
+        for (int i = 0; i < folderName.length; i++){
+            buildDateFile(folderName[i],date);
+        }
     }
 
-    private static void buildOneDateFile(String folderName, String date) throws IOException {
-        System.out.println(date);
-        System.out.println("------TANameList--------"+LoadConfig.Load("TANameList"));
+    private static void buildDateFile(String folderName, String date) throws IOException {
+       // System.out.println(date);
+       // System.out.println("------TANameList--------"+LoadConfig.Load("TANameList"));
         List<String>  TAList= Arrays.stream(LoadConfig.Load("TANameList").split(","))
                 .map(String::trim)
                 .collect(Collectors.toList());
-        for(String eachTA : TAList){
-            TAFileBuilder taFileBuilder = new TAFileBuilder(folderName, date, eachTA);
-            String[] filesToBuild = {"02"};   //02是账户确认文件
+        for(int i = 0; i < TAList.size(); i++){
+            TAFileBuilder taFileBuilder = new TAFileBuilder(folderName, date);
+            //String[] filesToBuild = {"02"};   //02是账户确认文件
+            String[] filesToBuild = LoadConfig.Load("OutputFileCode").split(",");
+           // System.out.println("-----------filesToBuild----------"+filesToBuild[i]);
             taFileBuilder.build(filesToBuild);
             System.out.println("-----------success----------");
         }

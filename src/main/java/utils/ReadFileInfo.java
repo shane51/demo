@@ -7,14 +7,19 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetFileContent {
+public class ReadFileInfo {
+    public static List<String> getFileName(){
+        List<String> fileNames = new ArrayList<>();
+        return fileNames;
+    }
 
     public static List<String> getContent(String fileDir) {
-        List<String> list = new ArrayList<>();
+        List<String> fileContent = new ArrayList<>();
         try
         {
             String encoding = "GBK";
             File file = new File(fileDir);
+            System.out.println(fileDir);
             if (file.isFile() && file.exists()){
                 {
                     InputStreamReader read = new InputStreamReader(new FileInputStream(file), encoding);// 考虑到编码格式
@@ -22,7 +27,7 @@ public class GetFileContent {
                     String lineTxt;
                     while ((lineTxt = bufferedReader.readLine()) != null)
                     {
-                        list.add(lineTxt);
+                        fileContent.add(lineTxt);
 
                     }
                     bufferedReader.close();
@@ -36,6 +41,6 @@ public class GetFileContent {
             System.out.println("读取文件内容出错");
             e.printStackTrace();
         }
-        return list;
+        return fileContent;
     }
 }

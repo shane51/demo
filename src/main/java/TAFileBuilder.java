@@ -1,4 +1,5 @@
-import utils.GetFileContent;
+import sun.lwawt.macosx.CSystemTray;
+import utils.AnalysisTemplate;
 import utils.LoadConfig;
 import utils.TxTDataReader;
 
@@ -8,16 +9,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TAFileBuilder {
     public String folderName;
     public String batchRunDate;
-    public String fileCode;
+ // public String fileCode;
     public String fileVersion;
     public String aggregationNumber;
     public String senderName;
@@ -25,19 +22,17 @@ public class TAFileBuilder {
     public String dataFileStartCode;
     public String indexFileStartCode;
     public String indexFileEndCode;
-    public String fileReciverCode;
-    public String outputFileName;
+    public List<String> outputFileName;
+    public List<String> outputPath;
 
     // title数量开始的位置，为固定的，所以写死
     private static final int TITLE_COUNT_INDEX = 9;
 
-    public TAFileBuilder(String folderName, String date, String fileCode) {
+    public TAFileBuilder(String folderName, String date) throws IOException {
         this.folderName = folderName;
         this.batchRunDate = date;
         this.dataFileStartCode = "OFDCFDAT";
-        this.fileVersion = "22";
-        this.fileReciverCode = "F6";
-        this.fileCode = fileCode;
+        this.fileVersion = LoadConfig.Load("pdfVersion");
         this.aggregationNumber = "000";
         this.indexFileStartCode = "OFDCFDAT";
         this.indexFileEndCode = "OFDCFEND";
@@ -48,47 +43,54 @@ public class TAFileBuilder {
     public void build(String[] fileTypes) throws IOException {
 
         TxTDataReader txtDataReader = new TxTDataReader();
+        this.senderName = txtDataReader.reciverCode;
+        this.receiverName = txtDataReader.senderCode;
         //build file
         String fileCreationDate = batchRunDate;
-        System.out.println(fileCreationDate);
-        for (String fileType : fileTypes) {
-            outputFileName = txtDataReader.getOutputFileName(fileCreationDate, folderName, fileType);
+      // for (int i = 0; i < fileTypes.length; i++) {
+            outputFileName = txtDataReader.getOutputFileName(fileCreationDate, folderName, fileTypes);
             TxTDataReader txtReader = new TxTDataReader();
-            List<String> data = txtReader.getInputFileContent();
+           //Get input file content
+            List<List<String>> data = txtReader.getInputFileContent();
             System.out.println(data);
-            populateOFDFile(fileCreationDate, fileType, data);
-        }
+            populateOFDFile(fileCreationDate, fileTypes, data);
+       // }
     }
 
-    private void populateOFDFile(String fileCreationDate, String fileType, List<String> data) throws IOException {
+    private void populateOFDFile(String fileCreationDate, String[] fileType, List<List<String>> data) throws IOException {
         String outDir;
         try {
             outDir = LoadConfig.Load("output_dir");
         } catch (IOException err) {
             outDir = "src/main/resources/";
         }
-        String outputDirPath = Paths.get(outDir, "output", fileCreationDate, fileCode).toString();
-        new File(outputDirPath).mkdirs();
-        String outputPath = Paths.get(outputDirPath, outputFileName).toString();
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputPath),
-                "GBK"));
-        writeHeader(writer, fileCreationDate, fileType);
-        List<List<String>> content = parseContent(data);
-        content.forEach(c -> {
-            try {
-                writeContent(writer, c.get(0), c.get(1));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        List<String> outputDirPath = new ArrayList<String>();
+        for (int i = 0; i < fileType.length; i++) {
+            outputDirPath.add(Paths.get(outDir, "output", fileCreationDate, LoadConfig.Load("TestScenarios"), fileType[i]).toString());
+            new File(outputDirPath.get(i)).mkdirs();
+            outputPath.add(Paths.get(outputDirPath.get(i), outputFileName.get(i)).toString());
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputPath.get(i)),
+                    "GBK"));
+            writeHeader(writer, fileCreationDate, fileType[i]);
+            List<List<String>> content = parseContent(data.get(i));
+            content.forEach(c -> {
+                try {
+                    writeContent(writer, c.get(0), c.get(1));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
 
-        writer.close();
+            writer.close();
+        }
+
     }
 
-    private List<List<String>> parseContent(List<String> data) {
-        List<List<String>> retContent = new ArrayList<>();
+    private List<List<String>> parseContent(List<String> data) throws IOException {
+        AnalysisTemplate templateFile = new AnalysisTemplate();
+        List<List<String>> retContent = templateFile.getInputDefinitionData();
+        System.out.println("------------retContent:"+retContent);
         //String date = "20201231";
-
         int titleCount = Integer.parseInt(data.get(TITLE_COUNT_INDEX));
         // 总共有几条数据
         int dataLength = Integer.parseInt(data.get(titleCount + TITLE_COUNT_INDEX + 1));
@@ -118,8 +120,8 @@ public class TAFileBuilder {
     private void writeHeader(BufferedWriter writer, String fileCreationDate, String fileType) throws IOException {
         writeWithNewLine(writer, dataFileStartCode);
         writeWithNewLine(writer, fileVersion);
-        writeWithNewLine(writer, fileCode);
-        writeWithNewLine(writer, fileReciverCode);
+        writeWithNewLine(writer, senderName);
+        writeWithNewLine(writer, receiverName);
         writeWithNewLine(writer, fileCreationDate);
         writeWithNewLine(writer, aggregationNumber);
         writeWithNewLine(writer, fileType);
@@ -142,7 +144,7 @@ public class TAFileBuilder {
         writer.write('\n');
     }
 
-    private ArrayList<String> readFields(String fileType) {
+    private List<String> readFields(String fileType) {
         //read field from fieldDefinitions fields.txt
         return null;
     }

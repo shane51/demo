@@ -24,8 +24,8 @@ public class FileBuilder {
             TAFileBuilder taFileBuilder = new TAFileBuilder(folderName, date);
             //String[] filesToBuild = {"02"};   //02是账户确认文件
             String[] filesToBuild = LoadConfig.Load("OutputFileCode").split(",");
-           // System.out.println("-----------filesToBuild----------"+filesToBuild[i]);
-            taFileBuilder.build(filesToBuild);
+           // TANameList = 1, build 一份文件
+            taFileBuilder.build(filesToBuild,i);
             System.out.println("-----------success----------");
         }
 

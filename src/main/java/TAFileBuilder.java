@@ -1,4 +1,3 @@
-import sun.lwawt.macosx.CSystemTray;
 import utils.AnalysisTemplate;
 import utils.LoadConfig;
 import utils.TxTDataReader;
@@ -14,7 +13,6 @@ import java.util.*;
 public class TAFileBuilder {
     public String folderName;
     public String batchRunDate;
- // public String fileCode;
     public String fileVersion;
     public String aggregationNumber;
     public String senderName;
@@ -39,23 +37,22 @@ public class TAFileBuilder {
         this.receiverName = "";
     }
 
-    public void build(String[] fileTypes) throws IOException {
+    public void build(String[] fileTypes,int i) throws IOException {
         TxTDataReader txtDataReader = new TxTDataReader();
-        System.out.println("senderName:"+senderName);
         //build file
         String fileCreationDate = batchRunDate;
         outputFileName = txtDataReader.getOutputFileName(fileCreationDate, folderName, fileTypes);
         TxTDataReader txtReader = new TxTDataReader();
            //Get input file content
         List<List<String>> data = txtReader.getInputFileContent();
-        System.out.println(data);
+        System.out.println("----input data---:" + data);
         this.senderName = txtDataReader.reciverCode;
         this.receiverName = txtDataReader.senderCode;
-        populateOFDFile(fileCreationDate, fileTypes, data);
+        populateOFDFile(fileCreationDate, fileTypes, data, i);
 
     }
 
-    private void populateOFDFile(String fileCreationDate, String[] fileType, List<List<String>> data) throws IOException {
+    private void populateOFDFile(String fileCreationDate, String[] fileType, List<List<String>> data, int i) throws IOException {
         String outDir;
         try {
             outDir = LoadConfig.Load("output_dir");
@@ -63,7 +60,21 @@ public class TAFileBuilder {
             outDir = "src/main/resources/";
         }
         List<String> outputDirPath = new ArrayList<String>();
-        for (int i = 0; i < fileType.length; i++) {
+//        for (int i = 0; i < fileType.length; i++) {
+//            outputDirPath.add(Paths.get(outDir, "output", fileCreationDate, LoadConfig.Load("TestScenarios"), fileType[i]).toString());
+//            new File(outputDirPath.get(i)).mkdirs();
+//            outputPath.add(Paths.get(outputDirPath.get(i), outputFileName.get(i)).toString());
+//            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputPath.get(i)),
+//                    "GBK"));
+//            writeHeader(writer, fileCreationDate, fileType[i]);
+//            List<List<String>> content = parseContent(data.get(i));
+//            content.forEach(c -> {
+//                try {
+//                    writeContent(writer, c.get(0), c.get(1));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            });
             outputDirPath.add(Paths.get(outDir, "output", fileCreationDate, LoadConfig.Load("TestScenarios"), fileType[i]).toString());
             new File(outputDirPath.get(i)).mkdirs();
             outputPath.add(Paths.get(outputDirPath.get(i), outputFileName.get(i)).toString());
@@ -77,18 +88,21 @@ public class TAFileBuilder {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             });
 
-            writer.close();
-        }
 
     }
 
     private List<List<String>> parseContent(List<String> data) throws IOException {
         AnalysisTemplate templateFile = new AnalysisTemplate();
         List<List<String>> retContent = templateFile.getInputDefinitionData();
-        System.out.println("------------retContent:"+retContent);
-        //String date = "20201231";
+        System.out.println(retContent);
         int titleCount = Integer.parseInt(data.get(TITLE_COUNT_INDEX));
         // 总共有几条数据
         int dataLength = Integer.parseInt(data.get(titleCount + TITLE_COUNT_INDEX + 1));
@@ -102,6 +116,7 @@ public class TAFileBuilder {
                     rules.get("AppSheetSerialNo_end"));
             retContent.add(Arrays.asList(AppSheetSerialNo, batchRunDate));
         }
+        System.out.println("-----retContent---:"+retContent);
         return retContent;
     }
     // 返回解析到的CSV规则

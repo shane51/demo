@@ -37,7 +37,8 @@ public class TxTDataReader {
         for (int i =0; i < inputFileDir.size(); i++){
             String fileName = inputFileDir.get(i)+"/"+inputFileName.get(i);
             System.out.println("------inputFileDir:"+fileName);
-            data.add(ReadFileInfo.getContent(fileName));}
+            data.add(ReadFileInfo.getContent(fileName));
+        }
         return data;
     }
     private void getSystemDate(){

@@ -16,25 +16,25 @@ public class AnalysisTemplate {
         List<String> InputFileCodeList= Arrays.stream(LoadConfig.Load("InputFileCode").split(","))
                 .map(String::trim)
                 .collect(Collectors.toList());
-        for(String eachTemp : InputFileCodeList){
-            File file = new File("");//参数为空
-            String inputFileTempPath = file.getCanonicalPath() + "/src/main/resources/fieldDefinitions/" + pdfVersion +"/"+ eachTemp +"/"+ "fieldDict.txt";
-            System.out.println("--------inputFileTempPath:"+inputFileTempPath);
+        for(int i = 0; i < InputFileCodeList.size(); i++){
+            File file = new File("");//参数为
+            inputFileTempPath.add(file.getCanonicalPath()+"/src/main/resources/fieldDefinitions/" + pdfVersion +"/"+ InputFileCodeList.get(i) +"/"+ "fieldDict.txt");
+            System.out.println("********inputFileTempPath**************:"+inputFileTempPath.get(i));
         }
     }
     public List<List<String>>  getInputDefinitionData() throws IOException {
+      //  System.out.println("**********************");
+        //读取模版文件
         readInputFile();
-        //得到模版文件
-        for (int i = 0; i< inputFileTempPath.size(); i++){
-            inputTempData.add(ReadFileInfo.getContent(inputFileTempPath.get(i).toString()));
-            System.out.println(inputTempData);
+        for (int i = 0; i < inputFileTempPath.size(); i++){
+            inputTempData.add(ReadFileInfo.getContent(inputFileTempPath.get(i)));
         }
+
         return inputTempData;
     }
 
     public void readFieldDefinitions(){
         //取得input的fieldDefinitions
-
 
     }
     public void AnalysisFieldDefinitions(){

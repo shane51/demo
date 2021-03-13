@@ -19,7 +19,6 @@ public class ReadFileInfo {
         {
             String encoding = "GBK";
             File file = new File(fileDir);
-            System.out.println(fileDir);
             if (file.isFile() && file.exists()){
                 {
                     InputStreamReader read = new InputStreamReader(new FileInputStream(file), encoding);// 考虑到编码格式

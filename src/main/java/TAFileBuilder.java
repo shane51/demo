@@ -23,11 +23,10 @@ public class TAFileBuilder {
     public String indexFileStartCode;
     public String indexFileEndCode;
     public List<String> outputFileName;
-    public List<String> outputPath;
+    public List<String> outputPath =  new ArrayList<>();
 
     // title数量开始的位置，为固定的，所以写死
     private static final int TITLE_COUNT_INDEX = 9;
-
     public TAFileBuilder(String folderName, String date) throws IOException {
         this.folderName = folderName;
         this.batchRunDate = date;
@@ -41,20 +40,19 @@ public class TAFileBuilder {
     }
 
     public void build(String[] fileTypes) throws IOException {
-
         TxTDataReader txtDataReader = new TxTDataReader();
-        this.senderName = txtDataReader.reciverCode;
-        this.receiverName = txtDataReader.senderCode;
+        System.out.println("senderName:"+senderName);
         //build file
         String fileCreationDate = batchRunDate;
-      // for (int i = 0; i < fileTypes.length; i++) {
-            outputFileName = txtDataReader.getOutputFileName(fileCreationDate, folderName, fileTypes);
-            TxTDataReader txtReader = new TxTDataReader();
+        outputFileName = txtDataReader.getOutputFileName(fileCreationDate, folderName, fileTypes);
+        TxTDataReader txtReader = new TxTDataReader();
            //Get input file content
-            List<List<String>> data = txtReader.getInputFileContent();
-            System.out.println(data);
-            populateOFDFile(fileCreationDate, fileTypes, data);
-       // }
+        List<List<String>> data = txtReader.getInputFileContent();
+        System.out.println(data);
+        this.senderName = txtDataReader.reciverCode;
+        this.receiverName = txtDataReader.senderCode;
+        populateOFDFile(fileCreationDate, fileTypes, data);
+
     }
 
     private void populateOFDFile(String fileCreationDate, String[] fileType, List<List<String>> data) throws IOException {

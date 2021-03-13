@@ -2,13 +2,14 @@ package utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class AnalysisTemplate {
-    List<String> inputFileTempPath;
-    List<List<String>> inputTempData;
+    List<String> inputFileTempPath = new ArrayList<>();
+    List<List<String>> inputTempData = new ArrayList<>();
     public void readInputFile() throws IOException {
         //通过pdfVersion获取当前版本下所有模版文件
         String pdfVersion = LoadConfig.Load("pdfVersion");

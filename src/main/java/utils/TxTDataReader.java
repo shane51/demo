@@ -15,7 +15,6 @@ public class TxTDataReader {
     public String getOutputFileName(String batchRunDate, String folderName, String fileType) throws IOException {
          String inputFileName = null;
          String inputfileType="01";
-
         //get input filename
         File file = new File("");//参数为空
         String path = file.getCanonicalPath() + "/src/main/resources/inputFiles/" + batchRunDate +"/"+ folderName +"/"+ inputfileType;
@@ -32,36 +31,9 @@ public class TxTDataReader {
         System.out.println("输入文件名：" + outputFileName);
         return outputFileName;
     }
-
-    public List<String> getInputContent(){
-        List<String> list = new ArrayList<>();
-        try
-        {
-            String encoding = "GBK";
-            File file = new File(inputFileDir);
-            if (file.isFile() && file.exists()){
-                {
-                    InputStreamReader read = new InputStreamReader(new FileInputStream(file), encoding);// 考虑到编码格式
-                    BufferedReader bufferedReader = new BufferedReader(read);
-                    String lineTxt;
-                    while ((lineTxt = bufferedReader.readLine()) != null)
-                    {
-                        list.add(lineTxt);
-
-                    }
-                    bufferedReader.close();
-                    read.close();
-                }
-            }
-            else{
-                System.out.println("找不到指定的文件");
-            }
-        } catch (Exception e) {
-            System.out.println("读取文件内容出错");
-            e.printStackTrace();
-        }
-        return list;
-
+    public List<String> getInputFileContent(){
+        List<String> data = GetFileContent.getContent(inputFileDir);
+        return data;
     }
     private void getSystemDate(){
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
@@ -72,7 +44,7 @@ public class TxTDataReader {
     private void getReciverSenderCode(String inputFileName) {
 
         String [] arr = inputFileName.split("_");
-        for(String ss : arr){
+        for(String ignored : arr){
             senderCode = arr[1];
             reciverCode = arr[2];
         }

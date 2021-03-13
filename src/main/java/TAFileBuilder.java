@@ -1,3 +1,4 @@
+import utils.GetFileContent;
 import utils.LoadConfig;
 import utils.TxTDataReader;
 
@@ -52,7 +53,8 @@ public class TAFileBuilder {
         System.out.println(fileCreationDate);
         for (String fileType : fileTypes) {
             outputFileName = txtDataReader.getOutputFileName(fileCreationDate, folderName, fileType);
-            List<String> data = txtDataReader.getInputContent();
+            TxTDataReader txtReader = new TxTDataReader();
+            List<String> data = txtReader.getInputFileContent();
             System.out.println(data);
             populateOFDFile(fileCreationDate, fileType, data);
         }

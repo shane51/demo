@@ -8,10 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReadFileInfo {
-    public static List<String> getFileName(){
-        List<String> fileNames = new ArrayList<>();
-        return fileNames;
-    }
 
     public static List<String> getContent(String fileDir) {
         List<String> fileContent = new ArrayList<>();

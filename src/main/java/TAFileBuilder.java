@@ -125,6 +125,7 @@ public class TAFileBuilder {
 //        writeWithNewLine(writer, "TransactionCfmDate");
         writer.flush();
     }
+    //需要再解析下outputfile得到字段名，再给字段填值
 
     private void writeContent(BufferedWriter writer, String AppSheetSerialNo, String TransactionCfmDate) throws IOException {
         writer.write(AppSheetSerialNo);

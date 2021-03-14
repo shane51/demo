@@ -9,7 +9,6 @@ import java.util.List;
 public class TxTDataReader {
     public static String reciverCode;
     public static String senderCode;
-    static String outputFileDate;
     static List<String>inputFileDir = new ArrayList<String>();
     static List<String> inputFileName = new ArrayList<String>();
     static List<String> outputFileName = new ArrayList<String>();
@@ -26,14 +25,13 @@ public class TxTDataReader {
             System.out.println("---inputFileName:"+ files[0].getName());
             inputFileName.add(files[0].getName());
             getReciverSenderCode(inputFileName.get(i));
-            getSystemDate();
-            outputFileName.add(String.format("OFD_%s_%s_%s_%s.TXT",reciverCode,senderCode,outputFileDate,fileType[i]));
+            outputFileName.add(String.format("OFD_%s_%s_%s_%s.TXT",reciverCode,senderCode,batchRunDate,fileType[i]));
             System.out.println("输出文件名：" + outputFileName.get(i));
         }
         return outputFileName;
     }
     public List<List<String>> getInputFileContent(){
-        List<List<String>> data = new ArrayList<List<String>>();;
+        List<List<String>> data = new ArrayList<>();;
         for (int i =0; i < inputFileDir.size(); i++){
             String fileName = inputFileDir.get(i)+"/"+inputFileName.get(i);
             System.out.println("------inputFileDir:"+fileName);
@@ -41,10 +39,7 @@ public class TxTDataReader {
         }
         return data;
     }
-    private void getSystemDate(){
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-        outputFileDate = df.format(new Date());
-    }
+
     private void getReciverSenderCode(String inputFileName) {
 
         String [] arr = inputFileName.split("_");

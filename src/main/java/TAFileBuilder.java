@@ -52,7 +52,6 @@ public class TAFileBuilder {
         this.senderName = txtDataReader.reciverCode;
         this.receiverName = txtDataReader.senderCode;
         populateOFDFile(fileCreationDate, fileTypes, data, i);
-
     }
 
     private void populateOFDFile(String fileCreationDate, String[] fileType, List<List<String>> data, int i) throws IOException {
@@ -63,14 +62,14 @@ public class TAFileBuilder {
             outDir = "src/main/resources/";
         }
         List<String> outputDirPath = new ArrayList<String>();
-      //  for (int j = 0; i < fileType.length; i++) {
-            outputDirPath.add(Paths.get(outDir, "output", fileCreationDate, LoadConfig.Load("TestScenarios"), fileType[i]).toString());
-            new File(outputDirPath.get(i)).mkdirs();
-            outputPath.add(Paths.get(outputDirPath.get(i), outputFileName.get(i)).toString());
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputPath.get(i)),
+        for (int j = 0; j < fileType.length; j++) {
+            outputDirPath.add(Paths.get(outDir, "output", fileCreationDate, LoadConfig.Load("TestScenarios"), fileType[j]).toString());
+            new File(outputDirPath.get(j)).mkdirs();
+            outputPath.add(Paths.get(outputDirPath.get(j), outputFileName.get(j)).toString());
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputPath.get(j)),
                     "GBK"));
-            writeHeader(writer, fileCreationDate, fileType[i]);
-            List<List<String>> content = parseContent(data.get(i));
+            writeHeader(writer, fileCreationDate, fileType[j]);
+            List<List<String>> content = parseContent(data.get(j));
             content.forEach(c -> {
                 try {
                     writeContent(writer, c.get(0), c.get(1));
@@ -78,7 +77,7 @@ public class TAFileBuilder {
                     e.printStackTrace();
                 }
             });
-       // }
+        }
     }
 
     private List<List<String>> parseContent(List<String> data) throws IOException {
@@ -91,12 +90,6 @@ public class TAFileBuilder {
         // 数据起始index
         int startIndex = titleCount + TITLE_COUNT_INDEX + 2;
 
-
-         fieldNames= Arrays.stream(LoadConfig.Load("fieldNames").split(","))
-                .map(String::trim)
-                .collect(Collectors.toList());
-         System.out.println("FieldsName:"+fieldNames);
-
         for (int i = 0; i < dataLength; i++) {
             String wholeContent = data.get(startIndex + i);
             String fieldName = wholeContent.substring(rules.get("Fields_start"), rules.get("Fields_end"));
@@ -106,16 +99,16 @@ public class TAFileBuilder {
     }
     // 返回解析到的CSV规则
     // TODO: 先mock 后续需要补充内容
-//    private Map<String, Integer> parseRule() {
-//        Map<String, Integer> rules = new HashMap<>();
-//        // 字段起始位置
-//        rules.put("AppSheetSerialNo_start", 15);
-//        // 字段结束位置
-//        rules.put("AppSheetSerialNo_end", 30);
-//        return rules;
-//    }
 
+    private void getFieldsName() throws IOException {
+        fieldNames= Arrays.stream(LoadConfig.Load("fieldNames").split(","))
+                .map(String::trim)
+                .collect(Collectors.toList());
+        System.out.println("FieldsName:"+fieldNames);
+    }
     private void writeHeader(BufferedWriter writer, String fileCreationDate, String fileType) throws IOException {
+
+
         writeWithNewLine(writer, dataFileStartCode);
         writeWithNewLine(writer, fileVersion);
         writeWithNewLine(writer, senderName);
@@ -124,9 +117,12 @@ public class TAFileBuilder {
         writeWithNewLine(writer, aggregationNumber);
         writeWithNewLine(writer, fileType);
         writeWithNewLine(writer, "");
-
-        writeWithNewLine(writer, "AppSheetSerialNo");
-        writeWithNewLine(writer, "TransactionCfmDate");
+        getFieldsName();
+        for(int i=0; i <fieldNames.size(); i++ ){
+            writeWithNewLine(writer, fieldNames.get(i));
+        }
+//        writeWithNewLine(writer, "AppSheetSerialNo");
+//        writeWithNewLine(writer, "TransactionCfmDate");
         writer.flush();
     }
 

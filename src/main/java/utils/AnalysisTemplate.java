@@ -17,19 +17,19 @@ public class AnalysisTemplate {
         for(int i = 0; i < InputFileCodeList.size(); i++){
             File file = new File("");//参数为
             inputFileTempPath.add(file.getCanonicalPath()+"/src/main/resources/fieldDefinitions/" + pdfVersion +"/"+ InputFileCodeList.get(i) +"/"+ "fieldDict.txt");
-            System.out.println("********inputFileTempPath**************:"+inputFileTempPath.get(i));
+            System.out.println("********inputFilTemplatePath**************:"+inputFileTempPath.get(i));
         }
     }
-    public List<List<String>>  getInputDefinitionData() throws IOException {
-        System.out.println("*********读取模版文件*************");
+    public Map<String, Integer>  getInputDefinitionData() throws IOException {
+        Map<String, Integer> parseRule = new HashMap<>();;
+                System.out.println("*********读取模版文件*************");
         //读取模版文件
         readInputFile();
         for (int i = 0; i < inputFileTempPath.size(); i++){
-            LoadTemplateFileInfo.getTempContent(inputFileTempPath.get(i));
+            parseRule = LoadTemplateFileInfo.getTempContent(inputFileTempPath.get(i));
         }
        // System.out.println("----inputTempData---:" + inputTempData);
-
-        return inputTempData;
+        return parseRule;
     }
 
 

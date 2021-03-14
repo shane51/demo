@@ -2,9 +2,7 @@ package utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AnalysisTemplate {
@@ -23,22 +21,21 @@ public class AnalysisTemplate {
         }
     }
     public List<List<String>>  getInputDefinitionData() throws IOException {
-      //  System.out.println("**********************");
+        System.out.println("*********读取模版文件*************");
         //读取模版文件
         readInputFile();
         for (int i = 0; i < inputFileTempPath.size(); i++){
-            inputTempData.add(ReadFileInfo.getContent(inputFileTempPath.get(i)));
+            LoadTemplateFileInfo.getTempContent(inputFileTempPath.get(i));
         }
+       // System.out.println("----inputTempData---:" + inputTempData);
 
         return inputTempData;
     }
 
-    public void readFieldDefinitions(){
-        //取得input的fieldDefinitions
 
-    }
-    public void AnalysisFieldDefinitions(){
+    public void AnalysisFieldDefinitions() throws IOException {
         //取得input文件中需要的字段
+
     }
 
 }

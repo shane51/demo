@@ -60,21 +60,7 @@ public class TAFileBuilder {
             outDir = "src/main/resources/";
         }
         List<String> outputDirPath = new ArrayList<String>();
-//        for (int i = 0; i < fileType.length; i++) {
-//            outputDirPath.add(Paths.get(outDir, "output", fileCreationDate, LoadConfig.Load("TestScenarios"), fileType[i]).toString());
-//            new File(outputDirPath.get(i)).mkdirs();
-//            outputPath.add(Paths.get(outputDirPath.get(i), outputFileName.get(i)).toString());
-//            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputPath.get(i)),
-//                    "GBK"));
-//            writeHeader(writer, fileCreationDate, fileType[i]);
-//            List<List<String>> content = parseContent(data.get(i));
-//            content.forEach(c -> {
-//                try {
-//                    writeContent(writer, c.get(0), c.get(1));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            });
+        for (int j = 0; i < fileType.length; i++) {
             outputDirPath.add(Paths.get(outDir, "output", fileCreationDate, LoadConfig.Load("TestScenarios"), fileType[i]).toString());
             new File(outputDirPath.get(i)).mkdirs();
             outputPath.add(Paths.get(outputDirPath.get(i), outputFileName.get(i)).toString());
@@ -88,21 +74,13 @@ public class TAFileBuilder {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             });
-
-
+        }
     }
 
     private List<List<String>> parseContent(List<String> data) throws IOException {
         AnalysisTemplate templateFile = new AnalysisTemplate();
         List<List<String>> retContent = templateFile.getInputDefinitionData();
-        System.out.println(retContent);
         int titleCount = Integer.parseInt(data.get(TITLE_COUNT_INDEX));
         // 总共有几条数据
         int dataLength = Integer.parseInt(data.get(titleCount + TITLE_COUNT_INDEX + 1));
@@ -116,7 +94,6 @@ public class TAFileBuilder {
                     rules.get("AppSheetSerialNo_end"));
             retContent.add(Arrays.asList(AppSheetSerialNo, batchRunDate));
         }
-        System.out.println("-----retContent---:"+retContent);
         return retContent;
     }
     // 返回解析到的CSV规则
